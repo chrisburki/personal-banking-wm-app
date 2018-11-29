@@ -1,0 +1,28 @@
+@import '~@angular/material/theming';
+
+// Create a config with the default typography levels.
+$config: mat-typography-config();
+
+// Custom header that uses only the Material `font-size` and `font-family`.
+.buc-body-0 {
+  font-size: mat-font-size($config, body-1);
+  font-family: mat-font-family($config, body-1);
+  line-height: mat-line-height($config, body-1);
+  font-weight: 300
+}
+
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+.fill-remaining-space {
+    flex: 1 1 auto;
+}
