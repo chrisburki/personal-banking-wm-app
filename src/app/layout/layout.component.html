@@ -4,41 +4,52 @@
 <div class="main-container" class="mat-app-background" class="mat-typography"> 
 
   <!-- Topbar -->
-  <mat-toolbar color="primary" class="topbar telative">
+  <mat-toolbar color="primary" class="my-topbar">
     <mat-toolbar-row>
 
-      <!-- Menu -->
-      <button mat-button [matMenuTriggerFor]="menu1">Menu 1</button>
+      <!-- Menu big screen -->
+      <div [hidden]="!mobileQuery.matches">
+        <button mat-button [matMenuTriggerFor]="menu1">Menu 1</button>
+      </div>
       <mat-menu #menu1="matMenu">
-        <button mat-menu-item>
-          <mat-icon>dialpad</mat-icon>
-          <span>Redial 1</span>
-        </button>
-        <button mat-menu-item disabled>
-          <mat-icon>voicemail</mat-icon>
-          <span>Check voicemail 1</span>
-        </button>
-        <button mat-menu-item>
-          <mat-icon>notifications_off</mat-icon>
-          <span>Disable alerts 1</span>
-        </button>
+        <button mat-menu-item><mat-icon>dialpad</mat-icon>Redial 1</button>
+        <button mat-menu-item disabled><mat-icon>voicemail</mat-icon>Check voicemail 1</button>
+        <button mat-menu-item><mat-icon>notifications_off</mat-icon>Disable alerts 1</button>
       </mat-menu>
 
-      <button mat-button [matMenuTriggerFor]="menu2">Menu 2</button>
+      <div [hidden]="!mobileQuery.matches">
+        <button mat-button [matMenuTriggerFor]="menu2">Menu 2</button>
+      </div>
       <mat-menu #menu2="matMenu">
-        <button mat-menu-item>
-          <mat-icon>dialpad</mat-icon>
-          <span>Redial 2</span>
-        </button>
-        <button mat-menu-item disabled>
-          <mat-icon>voicemail</mat-icon>
-          <span>Check voicemail 2</span>
-        </button>
-        <button mat-menu-item>
-          <mat-icon>notifications_off</mat-icon>
-          <span>Disable alerts 2</span>
-        </button>
+        <button mat-menu-item><mat-icon>dialpad</mat-icon>Redial 2</button>
+        <button mat-menu-item disabled><mat-icon>voicemail</mat-icon>Check voicemail 2</button>
+        <button mat-menu-item><mat-icon>notifications_off</mat-icon>Disable alerts 2</button>
       </mat-menu>
+
+      <!-- Menu small screen -->
+      <div [hidden]="mobileQuery.matches">
+        <button mat-icon-button [matMenuTriggerFor]="nestedMenu">
+          <mat-icon>menu</mat-icon>
+        </button>
+
+        <mat-menu #nestedMenu="matMenu">
+          <button mat-menu-item [matMenuTriggerFor]="nestedMenu1">Menu 1</button>
+          <button mat-menu-item [matMenuTriggerFor]="nestedMenu2">Menu 2</button>
+        </mat-menu>
+                
+        <mat-menu #nestedMenu1="matMenu">
+          <button mat-menu-item><mat-icon>dialpad</mat-icon>Redial 1</button>
+          <button mat-menu-item disabled><mat-icon>voicemail</mat-icon>Check voicemail 1</button>
+          <button mat-menu-item><mat-icon>notifications_off</mat-icon>Disable alerts 1</button>
+        </mat-menu>
+
+        <mat-menu #nestedMenu2="matMenu">
+          <button mat-menu-item><mat-icon>dialpad</mat-icon>Redial 2</button>
+          <button mat-menu-item disabled><mat-icon>voicemail</mat-icon>Check voicemail 2</button>
+          <button mat-menu-item><mat-icon>notifications_off</mat-icon>Disable alerts 2</button>
+          </mat-menu>
+
+      </div>
 
       <!-- Filling & Right Text -->
       <span class="fill-remaining-space"></span>
@@ -48,10 +59,12 @@
   </mat-toolbar>
 
   <!-- main content -->
-  <div class="page-wrapper">
-    <div class="page-content">
-      <p *ngFor="let content of fillerContent">{{content}}</p>
-    </div>
+  <div class="page-content">
+    <p *ngFor="let content of fillerContent">{{content}}</p>
   </div>
 
+  <!-- Bottombar -->
+  <mat-toolbar color="primary" class="my-bottombar">
+      <span class="mat-body-2">Bottom Text</span>
+  </mat-toolbar>
 </div>

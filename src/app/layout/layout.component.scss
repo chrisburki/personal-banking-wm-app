@@ -11,6 +11,21 @@ $config: mat-typography-config();
   font-weight: 300
 }
 
+// ensures top toolbar to be fixed on top
+.my-topbar {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+}
+
+// ensures top toolbar to be fixed on top
+.my-bottombar {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+}
 
 .main-container {
     display: flex;
@@ -25,4 +40,11 @@ $config: mat-typography-config();
 
 .fill-remaining-space {
     flex: 1 1 auto;
+}
+
+.page-wrapper{
+  height:calc(100vh - 80px);
+}
+.page-content{
+  padding: 10px;
 }
