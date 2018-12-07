@@ -1,0 +1,115 @@
+<!-- column -->
+<div>
+  <img src="assets/picture/grand-canyon-340.jpg" id="bg2" alt="image">
+</div>
+<!-- column -->
+<div>
+  <img src="assets/picture/grand-canyon-340.jpg" id="bg" alt="image">
+</div>
+<!-- row -->
+<div fxLayout="row wrap" class="boxed">
+  <!-- row -->
+  <!-- column -->
+  <div fxFlex.gt-sm="25%" fxFlex.sm="50%" fxFlex.xs="100" fxFlex="100">
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Customer</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Name: {{customer.firstName}} {{customer.lastName}}</p>
+        <p>Birthdate: {{customer.birthDate | date:'d MMM y'}}</p>
+        <p>Email: {{customer.email}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- column -->
+  <div fxFlex.gt-sm="25%" fxFlex.sm="50%" fxFlex.xs="100" fxFlex="100">
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Customer</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Name: {{customer.firstName}} {{customer.lastName}}</p>
+        <p>Birthdate: {{customer.birthDate | date:'d MMM y'}}</p>
+        <p>Email: {{customer.email}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- column -->
+  <div fxFlex.gt-sm="25%" fxFlex.sm="50%" fxFlex.xs="100" fxFlex="100">
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Customer</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Name: {{customer.firstName}} {{customer.lastName}}</p>
+        <p>Birthdate: {{customer.birthDate | date:'d MMM y'}}</p>
+        <p>Email: {{customer.email}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- column -->
+  <div fxFlex.gt-sm="25%" fxFlex.sm="50%" fxFlex.xs="100" fxFlex="100">
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Customer</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Name: {{customer.firstName}} {{customer.lastName}}</p>
+        <p>Birthdate: {{customer.birthDate | date:'d MMM y'}}</p>
+        <p>Email: {{customer.email}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- row -->
+  <!-- column -->
+  <div fxFlex.gt-xs="33.3%" fxFlex.xs="100" fxFlex="100">
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Customer</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Name: {{customer.firstName}} {{customer.lastName}}</p>
+        <p>Birthdate: {{customer.birthDate | date:'d MMM y'}}</p>
+        <p>Email: {{customer.email}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- column -->
+  <div fxFlex.gt-xs="33.3%" fxFlex.xs="100" fxFlex="100">
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Customer</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Name: {{customer.firstName}} {{customer.lastName}}</p>
+        <p>Birthdate: {{customer.birthDate | date:'d MMM y'}}</p>
+        <p>Email: {{customer.email}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- column -->
+  <div fxFlex.gt-xs="33.4%" fxFlex.xs="100" fxFlex="100">
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Customer</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Name: {{customer.firstName}} {{customer.lastName}}</p>
+        <p>Birthdate: {{customer.birthDate | date:'d MMM y'}}</p>
+        <p>Email: {{customer.email}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- column -->
+  <div fxFlex="100">
+    <p></p>
+    <mat-divider></mat-divider>
+    <p></p>
+  </div>
+    
+  <!-- column -->
+  <div fxFlex="100">
+    <p *ngFor="let content of fillerContent">{{content}}</p>
+</div>
+  </div>

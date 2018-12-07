@@ -1,0 +1,80 @@
+
+$white: #ffffff;
+$radius: 4px;
+
+#bg {
+    position: absolute;
+    top: 64px; 
+    left: 0; 
+    z-index: 0;
+      
+    /* Preserve aspet ratio */
+    width: 100%;
+    height: auto;
+  }
+
+#bg2 {
+    top: 0; 
+    left: 0; 
+    z-index: -2;
+      
+    /* Preserve aspet ratio */
+    width: 100%;
+    height: auto;
+    //height:calc(100vh - 64px);
+  }
+
+.mat-card{
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05)!important;  
+    -webkit-box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05)!important; 
+    margin: 1%;
+    padding: 0px!important;
+    border-radius: $radius;
+    
+    .mat-card-content{
+        line-height: 23px;
+        padding: 24px;    
+    }
+    .mat-card-image {
+        width: calc(100% + 0px);
+        margin: 0 0px 0px 0px;
+    }
+    .mat-card-header{
+        padding: 12px;
+        border-radius: $radius $radius 0 0;
+        .mat-card-title{
+            margin-bottom: 2px;
+        }
+        .mat-card-subtitle, .mat-card-subtitle:not(:first-child){
+            margin-bottom: 0px;
+            margin-top: 0px;
+        }
+        &.text-white{
+           .mat-card-title{
+            color:$white;
+            }
+            .mat-card-subtitle{
+                color:rgba(255, 255, 255, 0.7);
+            }
+        }
+    }
+    .mat-card-title{
+        margin-bottom: 5px;
+    }
+    .mat-card-subtitle{
+        margin-bottom: 20px;
+    }
+    .mat-card-actions{
+        margin: 0px!important;
+    }
+}
+
+
+.boxed{
+  max-width: 1300px;
+  margin: auto;
+}
+
+.non-boxed{
+  max-width: none;
+} 

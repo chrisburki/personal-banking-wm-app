@@ -17,6 +17,7 @@ $config: mat-typography-config();
   top: 0px;
   right: 0px;
   left: 0px;
+  z-index: 2;
 }
 
 // ensures top toolbar to be fixed on top
@@ -25,6 +26,7 @@ $config: mat-typography-config();
   bottom: 0px;
   right: 0px;
   left: 0px;
+  z-index: 2;
 }
 
 .main-container {
@@ -43,8 +45,6 @@ $config: mat-typography-config();
 }
 
 .page-wrapper{
-  height:calc(100vh - 80px);
-}
-.page-content{
-  padding: 10px;
+  padding-top: 64px;
+  padding-bottom: 64px;
 }
