@@ -1,33 +1,30 @@
 
 $white: #ffffff;
-$radius: 4px;
+$radius: 0px;
 
-#bg {
+.bg {
     position: absolute;
     top: 64px; 
     left: 0; 
     z-index: 0;
-      
-    /* Preserve aspet ratio */
     width: 100%;
-    height: auto;
-  }
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    background-color: black; /* fallback color */
+    background-image: url("../../assets/picture/grand-palace-hongkong_340.jpg");
+}
 
-#bg2 {
-    top: 0; 
-    left: 0; 
+.bg-fill {
+    padding: 100px; 
     z-index: -2;
-      
-    /* Preserve aspet ratio */
-    width: 100%;
-    height: auto;
-    //height:calc(100vh - 64px);
+    Background-color: #fff;/* Your Color */
   }
 
 .mat-card{
-    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05)!important;  
-    -webkit-box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05)!important; 
-    margin: 1%;
+    box-shadow: 0px 5px 20px rgb(0, 0, 0)!important;  
+    -webkit-box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.5)!important; 
+    margin: 2%;
     padding: 0px!important;
     border-radius: $radius;
     
@@ -68,7 +65,6 @@ $radius: 4px;
         margin: 0px!important;
     }
 }
-
 
 .boxed{
   max-width: 1300px;
