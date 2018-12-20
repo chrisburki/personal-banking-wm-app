@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Customer } from '../model/model.customer.class';
-import { CUST } from '../mock/mock.customer.data';
+import { CustomerService } from '../service/customer.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,10 +17,15 @@ export class DashboardComponent implements OnInit {
        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`);
 
-  constructor() { }
+  constructor(private customerService: CustomerService) { }
+
+  getCustomer(): void {
+    this.customerService.getCustomer()
+    .subscribe(customer => this.customer = customer);
+  }
 
   ngOnInit() {
-    this.customer = CUST;
+    this.getCustomer();
   }
 
 }
