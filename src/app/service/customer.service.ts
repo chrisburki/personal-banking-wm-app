@@ -21,7 +21,7 @@ const API_URL = environment.apiUrl;
 export class CustomerService {
 
 
-  private customerUrl = '/customer';
+  private customerUrl = 'api/customer';
 
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
@@ -38,7 +38,7 @@ export class CustomerService {
   getCustomer(): Observable<Customer> {
 //    const url = `${this.customerUrl}/${12}`;
     const url = `${this.customerUrl}?key=AB`;
-    return this.http.get<Customer>(API_URL + url, httpOptions)
+    return this.http.get<Customer>(url, httpOptions)
       .pipe(
         tap(data => console.log(data)),
         catchError(this.handleError('getCustomer', CUST))
