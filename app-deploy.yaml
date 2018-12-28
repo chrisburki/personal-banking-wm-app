@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wm-app
+spec:
+  selector:
+    app: customer
+    role: frontend
+    scs: wm
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wm-app
+spec:
+  selector:
+    matchLabels:
+      app: customer
+      role: frontend
+      scs: wm
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: customer
+        role: frontend
+        scs: wm
+    spec:
+      containers:
+      - name: nginx
+        image: chrisburki/wm-app
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/usr/sbin/nginx","-s","quit"]

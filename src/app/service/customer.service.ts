@@ -21,7 +21,8 @@ const API_URL = environment.apiUrl;
 export class CustomerService {
 
 
-  private customerUrl = 'api/customer';
+  private customerUrlProxy = 'api/customer';
+  private customerUrl = '/customer';
 
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
@@ -36,8 +37,8 @@ export class CustomerService {
 
   // in case service is not available mock data are returned
   getCustomer(): Observable<Customer> {
-//    const url = `${this.customerUrl}/${12}`;
-    const url = `${this.customerUrl}?key=AB`;
+    const url = API_URL + `${this.customerUrl}/${12}`;
+//    const url = `${this.customerUrlProxy}?key=AB`;
     return this.http.get<Customer>(url, httpOptions)
       .pipe(
         tap(data => console.log(data)),
