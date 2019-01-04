@@ -41,7 +41,7 @@ export class CustomerService {
 //    const url = API_URL + `${this.customerUrl}/${12}`;
 //    const url = `${this.customerUrlProxy}?key=AB`;
 //    const url = `http://${location.host}${this.customerHostUrl}/${12}`;
-    const url = `http://10.11.246.163:80${this.customerHostUrl}?key=AB`;
+    const url = `http://${location.host}:80${this.customerHostUrl}?key=AB`;
     return this.http.get<Customer>(url, httpOptions)
       .pipe(
         tap(data => console.log(data)),

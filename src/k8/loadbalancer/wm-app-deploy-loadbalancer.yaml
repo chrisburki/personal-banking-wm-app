@@ -19,6 +19,7 @@ spec:
       containers:
       - name: nginx
         image: chrisburki/wm-app
+        imagePullPolicy: Always
         lifecycle:
           preStop:
             exec:
