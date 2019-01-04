@@ -4,6 +4,7 @@ metadata:
   name: wm-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: "wm-nginx"
 spec:
   rules:
   - http:
