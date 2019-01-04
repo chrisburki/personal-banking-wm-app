@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: nginx-ingress-controller<
+  name: nginx-ingress-controller
   labels:
     k8s-app: nginx-ingress-controller
 spec:
