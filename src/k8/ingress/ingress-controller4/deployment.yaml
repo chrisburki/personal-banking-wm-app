@@ -9,7 +9,7 @@ kind: Deployment
 metadata:
   name: default-backend
   namespace: ingress
-  spec:
+spec:
   replicas: 2
   template:
     metadata:
