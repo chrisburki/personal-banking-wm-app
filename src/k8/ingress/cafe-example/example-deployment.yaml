@@ -33,6 +33,7 @@ spec:
     name: http
   selector:
     app: coffee
+  type: NodePort
 
 ---
 apiVersion: extensions/v1beta1
@@ -69,6 +70,7 @@ spec:
     name: http
   selector:
     app: tea
+  type: NodePort
 
 ---
 apiVersion: v1
