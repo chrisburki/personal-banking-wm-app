@@ -1,4 +1,5 @@
 #https://github.com/nginxinc/kubernetes-ingress/tree/master/examples/complete-example
+#curl --resolve cafe.example.com:443:35.246.126.233 https://cafe.example.com:443/tea --insecure
 
 apiVersion: extensions/v1beta1
 kind: Deployment

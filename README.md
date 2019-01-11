@@ -123,3 +123,11 @@ nginx - routing
 https://tech.holidayextras.com/routing-to-internal-kubernetes-services-using-proxies-and-ingress-controllers-e7eb44954d53
 https://coderjourney.com/kubernetes-frontend-service-with-nginx/
 
+IP routing
+----------
+https://support.acquia.com/hc/en-us/articles/360005257154-Use-cURL-s-resolve-option-to-pin-a-request-to-an-IP-address
+
+adapt c:\Windows\System32\Drivers\etc\hosts, e.g. add 35.246.126.233  cafe.example.com 
+then http://cafe.example.com/ or http://cafe.example.com/customer/13 in the browser
+then run Clear-DnsClientCache in PowerShell as Admin
+
