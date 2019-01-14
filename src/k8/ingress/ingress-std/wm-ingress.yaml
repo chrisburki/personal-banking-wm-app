@@ -4,14 +4,13 @@ metadata:
   name: wm-ingress
 spec:
   rules:
-  - host: cafe.example.com
-    http:
+  - http:
       paths:
-      - path: /
+      - path: /*
         backend:
           serviceName: wm-app
           servicePort: 80
-      - path: /customer
+      - path: /customer/*
         backend:
           serviceName: wm-customer
           servicePort: 80
