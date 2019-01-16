@@ -67,21 +67,16 @@ chmod +x ./src/k8/wm-loadbalancer.sh
 ./src/k8/wm-loadbalancer.sh
 
 -- ingress
--- var 1 - simple standalone one
-kubectl apply -f ./src/k8/ingress/ingress-controller
-
+-- var 1 - nginx ingress controller
+kubectl apply -f ./src/k8/ingress/ingress-controller1
 
 -- var 2 - nginxinc ingress
 https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/installation.md
 
--- var 3 - nginx ingress controller
-https://kubernetes.github.io/ingress-nginx/deploy/
-kubectl apply -f ./src/k8/ingress/ingress-controller3
+-- var 3 - standard GCP load balancer via ingress
+see directory ingress-std
 
--- var 4 - 
-https://akomljen.com/kubernetes-nginx-ingress-controller/
-kubectl apply -f ./src/k8/ingress/ingress-controller4
-
+-- deploy app for ingress
 kubectl apply -f ./src/k8/ingress
 
 

@@ -25,15 +25,20 @@ spec:
               protocol: TCP
           readinessProbe:
             tcpSocket:
-              port: 80
+              port: 8080
             initialDelaySeconds: 5
             periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 1
+            successThreshold: 1
           livenessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 80
-            initialDelaySeconds: 3
-            periodSeconds: 3
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 1
+            successThreshold: 1
 
 ---
 
