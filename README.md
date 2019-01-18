@@ -48,9 +48,15 @@ docker push chrisburki/wm-customer:latest
 
 4. run docker image
 -------------------
-docker run --name wm-customer -p 8090:8080 -d wm-customer
+docker run --name wm-customer-db -e POSTGRES_USER=buc -e POSTGRES_PASSWORD=buc -e POSTGRES_DB=wm-customer -p 5432:5432 -d postgres
+docker run --name wm-customer -p 8090:8080 --link wm-customer-db:postgres -d wm-customer
 docker run --name wm-app -p 8081:80 -d wm-app
 
+4a. postgres db
+---------------
+exec -it wm-customer-db bash
+psql -d wm-customer -U buc -W
+http://www.postgresqltutorial.com/psql-commands/
 
 5. clone image from git
 -----------------------

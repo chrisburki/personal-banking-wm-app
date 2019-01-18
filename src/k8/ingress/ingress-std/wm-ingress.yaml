@@ -14,4 +14,4 @@ spec:
       - path: /customer/*
         backend:
           serviceName: wm-customer
-          servicePort: 80
+          servicePort: 8080
