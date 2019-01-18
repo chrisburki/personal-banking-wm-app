@@ -19,6 +19,12 @@ kind: Deployment
 metadata:
   name: wm-customer-db
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer
+      role: database
+      scs: wm
   strategy:
     type: Recreate
   template:
