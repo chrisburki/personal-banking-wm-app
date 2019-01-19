@@ -1,4 +1,14 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: default
+data:
+  postgres_user: buc
+  postgres_password: buc
+
+  ---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: customer-db-claim
@@ -38,12 +48,18 @@ spec:
         - name: wm-customer-db
           image: postgres
           env:
-            - name: POSTGRES_USER
-              value: buc
             - name: POSTGRES_DB
               value: wm-customer
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: postgres_user
             - name: POSTGRES_PASSWORD
-              value: buc
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: postgres_password
           ports:
             - containerPort: 5432
           volumeMounts:
@@ -69,3 +85,4 @@ spec:
     - protocol: TCP
       port: 5432
       targetPort: 5432
+  type: ClusterIP

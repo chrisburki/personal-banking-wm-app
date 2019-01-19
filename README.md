@@ -58,6 +58,11 @@ exec -it wm-customer-db bash
 psql -d wm-customer -U buc -W
 http://www.postgresqltutorial.com/psql-commands/
 
+doku
+https://blog.nebrass.fr/playing-with-spring-boot-on-kubernetes/
+https://github.com/mkjelland/spring-boot-postgres-on-k8s-sample
+
+
 5. clone image from git
 -----------------------
 initial clone: git clone xxx
