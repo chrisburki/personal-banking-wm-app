@@ -14,3 +14,7 @@ kubectl delete service wm-customer-db
 
 #delete ingress
 kubectl delete ingress wm-ingress
+
+
+#better delete deployments
+#delete configmap hostname-config

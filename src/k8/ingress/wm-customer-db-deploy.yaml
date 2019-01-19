@@ -78,7 +78,7 @@ metadata:
   name: wm-customer-db
 spec:
   selector:
-    app: wm-app
+    app: customer
     role: database
     scs: wm
   ports:
