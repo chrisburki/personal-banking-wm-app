@@ -54,7 +54,7 @@ docker run --name wm-app -p 8081:80 -d wm-app
 
 4a. postgres db
 ---------------
-exec -it wm-customer-db bash
+docker exec -it wm-customer-db bash
 psql -d wm-customer -U buc -W
 http://www.postgresqltutorial.com/psql-commands/
 
@@ -89,6 +89,20 @@ see directory ingress-std
 
 -- deploy app for ingress
 kubectl apply -f ./src/k8/ingress
+
+-- start stop with gcp load balaner
+https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer
+
+gcloud config set project buc-personal-banking
+gcloud config set compute/zone europe-west3-c
+gcloud container clusters create personalbanking
+gcloud container clusters get-credentials personalbanking
+
+load deployments
+
+delete deployments
+
+gcloud container clusters delete personalbanking
 
 
 -- cleanup

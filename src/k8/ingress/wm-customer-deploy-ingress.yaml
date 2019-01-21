@@ -22,7 +22,7 @@ spec:
         image: chrisburki/wm-customer
         imagePullPolicy: Always
         ports:
-          - containerPort: 8080
+          - containerPort: 80
             protocol: TCP
         env:
           - name: POSTGRES_USER
@@ -40,25 +40,8 @@ spec:
               configMapKeyRef:
                 name: hostname-config
                 key: postgres_host
-        readinessProbe:
-          tcpSocket:
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          timeoutSeconds: 2
-          failureThreshold: 1
-          successThreshold: 1
-        livenessProbe:
-          tcpSocket:
-            port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 20
-          timeoutSeconds: 2
-          failureThreshold: 1
-          successThreshold: 1
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -70,6 +53,6 @@ spec:
     scs: wm
   ports:
   - protocol: TCP
-    port: 8080
+    port: 80
     targetPort: 8080
   type: NodePort
