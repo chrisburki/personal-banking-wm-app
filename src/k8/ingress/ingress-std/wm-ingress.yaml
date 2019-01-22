@@ -4,8 +4,7 @@ metadata:
   name: wm-ingress
 spec:
   rules:
-  - host: burki.wm.com
-    http:
+  - http:
       paths:
       - path: /*
         backend:

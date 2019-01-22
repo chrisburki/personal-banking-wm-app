@@ -1,4 +1,14 @@
 #before: kubectl create configmap hostname-config --from-literal=postgres_host=$(kubectl get svc wm-customer-db -o jsonpath="{.spec.clusterIP}")
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hostname-config
+  namespace: default
+data:
+  postgres_user: buc
+  postgres_password: buc
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
