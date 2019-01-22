@@ -98,7 +98,7 @@ gcloud config set compute/zone europe-west3-c
 gcloud container clusters create personalbanking
 gcloud container clusters get-credentials personalbanking
 
-load deployments
+create deployments
 
 delete deployments
 

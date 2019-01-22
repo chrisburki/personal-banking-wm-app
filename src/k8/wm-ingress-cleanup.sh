@@ -16,4 +16,5 @@ kubectl delete service wm-customer-db
 kubectl delete ingress wm-ingress
 
 #delete configmap
-delete configmap hostname-config
+kubectl delete configmap hostname-config
+kubectl delete configmap postgres-config
