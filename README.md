@@ -93,12 +93,20 @@ kubectl apply -f ./src/k8/ingress
 -- start stop with gcp load balaner
 https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer
 
+-- create cluster
 gcloud config set project buc-personal-banking
 gcloud config set compute/zone europe-west3-c
-gcloud container clusters create personalbanking
+gcloud container clusters create personalbanking --machine-type=g1-small --disk-size=30GB --num-nodes=1
 gcloud container clusters get-credentials personalbanking
 
-create deployments
+-- create deployments
+kubectl create -f src/k8/ingress/wm-customer-db-deploy.yaml
+kubectl create configmap hostname-config --from-literal=postgres_host=$(kubectl get svc wm-customer-db -o jsonpath="{.spec.clusterIP}")
+kubectl create -f src/k8/ingress/wm-customer-deploy-ingress.yaml
+kubectl create -f src/k8/ingress/wm-app-deploy-ingress.yaml
+kubectl create -f src/k8/ingress/ingress-std/wm-ingress.yaml
+
+
 
 delete deployments
 
@@ -151,3 +159,10 @@ adapt c:\Windows\System32\Drivers\etc\hosts, e.g. add 35.246.126.233  cafe.examp
 then http://cafe.example.com/ or http://cafe.example.com/customer/13 in the browser
 then run Clear-DnsClientCache in PowerShell as Admin
 
+Call Rest Endpoint
+------------------
+https://jaxenter.com/spring-boot-tutorial-microservices-kubernetes-part-2-135518.html
+
+Secrets
+-------
+https://itnext.io/migrating-a-spring-boot-service-to-kubernetes-in-5-steps-7c1702da81b6
