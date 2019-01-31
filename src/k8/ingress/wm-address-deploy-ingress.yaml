@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wm-address
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: address
+      role: backend
+      scs: wm
+  template:
+    metadata:
+      labels:
+        app: address
+        role: backend
+        scs: wm
+    spec:
+      containers:
+      - name: wm-address
+        image: chrisburki/wm-address
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8091
+

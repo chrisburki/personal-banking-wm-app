@@ -45,11 +45,19 @@ docker build -t wm-customer .
 docker tag wm-customer chrisburki/wm-customer
 docker push chrisburki/wm-customer:latest
 
+docker build -t wm-address .
+docker tag wm-address chrisburki/wm-address
+docker push chrisburki/wm-address:latest
+
+docker build -t wm-testrestclient .
+docker tag wm-testrestclient chrisburki/wm-testrestclient
+docker push chrisburki/wm-testrestclient:latest
 
 4. run docker image
 -------------------
 docker run --name wm-customer-db -e POSTGRES_USER=buc -e POSTGRES_PASSWORD=buc -e POSTGRES_DB=wm-customer -p 5432:5432 -d postgres
 docker run --name wm-customer -p 8090:8080 --link wm-customer-db:postgres -d wm-customer
+docker run --name wm-address -p 8091:8080 -d wm-address
 docker run --name wm-app -p 8081:80 -d wm-app
 
 4a. postgres db
