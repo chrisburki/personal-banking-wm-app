@@ -21,5 +21,23 @@ spec:
         image: chrisburki/wm-address
         imagePullPolicy: Always
         ports:
-        - containerPort: 8091
+        - protocol: TCP
+          containerPort: 8080
 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wm-address
+spec:
+  selector:
+    app: address
+    role: backend
+    scs: wm
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: NodePort
+#status:
+#  loadBalancer: {}

@@ -35,6 +35,7 @@ https://www.callicoder.com/spring-boot-docker-example/
 https://www.baeldung.com/dockerizing-spring-boot-application
 https://stackify.com/guide-docker-java/
 
+
 3. build docker image
 ---------------------
 docker build -t wm-app .
@@ -52,6 +53,7 @@ docker push chrisburki/wm-address:latest
 docker build -t wm-testrestclient .
 docker tag wm-testrestclient chrisburki/wm-testrestclient
 docker push chrisburki/wm-testrestclient:latest
+
 
 4. run docker image
 -------------------
@@ -101,7 +103,10 @@ kubectl apply -f ./src/k8/ingress
 -- start stop with gcp load balaner
 https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer
 
--- create cluster
+
+--------------------------
+-- create & delete cluster
+--------------------------
 gcloud config set project buc-personal-banking
 gcloud config set compute/zone europe-west3-c
 gcloud container clusters create personalbanking --machine-type=g1-small --disk-size=30GB --num-nodes=1
@@ -114,17 +119,27 @@ kubectl create -f src/k8/ingress/wm-customer-deploy-ingress.yaml
 kubectl create -f src/k8/ingress/wm-app-deploy-ingress.yaml
 kubectl create -f src/k8/ingress/ingress-std/wm-ingress.yaml
 
+-- delete deployments
+kubectl delete -f src/k8/ingress/ingress-std/wm-ingress.yaml
+kubectl delete -f src/k8/ingress/wm-app-deploy-ingress.yaml
+kubectl delete -f src/k8/ingress/wm-customer-deploy-ingress.yaml
+kubectl delete configmap hostname-config
+kubectl delete -f src/k8/ingress/wm-customer-db-deploy.yaml
 
-
-delete deployments
 
 gcloud container clusters delete personalbanking
+--------------------------
+-- create & delete cluster
+--------------------------
 
 
 -- cleanup
 kubectl delete namespace ingress-nginx (only needed for var 3)
 run wm-ingress-cleanup.sh
 
+
+7. debug on kubernetes
+----------------------
 --- show logs within a container
 docker run -i -t --volumes-from wm-app --name wm-app2 debian /bin/bash
 https://blog.docker.com/2015/04/tips-for-deploying-nginx-official-image-with-docker/
@@ -148,6 +163,12 @@ start a proxy: kubectl proxy  /
 kubectl exec [POD_NAME] env
 kubectl exec -ti [POD_NAME] bash
 
+yaml
+----
+kubectl get deploy deploymentname -o yaml --export
+
+8. documentations
+-----------------
 nginx - front end / back-end
 ----------------------------
 https://github.com/achalise/multi-tier-kubernetes/blob/master/front-end/frontend.conf
@@ -174,3 +195,14 @@ https://jaxenter.com/spring-boot-tutorial-microservices-kubernetes-part-2-135518
 Secrets
 -------
 https://itnext.io/migrating-a-spring-boot-service-to-kubernetes-in-5-steps-7c1702da81b6
+
+Ports
+-----
+to access service from busybox (other service):
+pod must on port 8080 (targetPort of service), service can run on port 80 or 8080 (Port of service)
+
+kubectl run wm-address --image=chrisburki/wm-address:latest --port=8080
+kubectl expose deployment wm-address --target-port=8080 --port=8080 --type=NodePort
+
+kubectl run wm-tc --image=chrisburki/wm-testrestclient:latest --port=8080
+kubectl expose deployment wm-tc --target-port=8080 --port=8080 --type=NodePort
