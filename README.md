@@ -206,3 +206,34 @@ kubectl expose deployment wm-address --target-port=8080 --port=8080 --type=NodeP
 
 kubectl run wm-tc --image=chrisburki/wm-testrestclient:latest --port=8080
 kubectl expose deployment wm-tc --target-port=8080 --port=8080 --type=NodePort
+
+Kafka
+-----
+https://github.com/kubernetes/contrib/tree/master/statefulsets/kafka
+https://www.learningjournal.guru/courses/kafka/kafka-foundation-training/
+
+-- Check it out locally
+https://medium.com/@itseranga/kafka-and-zookeeper-with-docker-65cff2c2c34f
+https://hub.docker.com/r/bitnami/kafka/
+
+** create a network "buc-kafka"
+docker network create buc-kafka --driver bridge
+
+** start zookeeper
+docker run -d --name zookeeper --network buc-kafka -e ALLOW_ANONYMOUS_LOGIN=yes -p 2181:2181 bitnami/zookeeper:latest
+
+** start kafka
+docker run -d --name kafka --network buc-kafka -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 -e ALLOW_PLAINTEXT_LISTENER=yes -p 9092:9092 bitnami/kafka:latest
+
+** create a topic "buc"
+docker run --rm --network buc-kafka -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 bitnami/kafka:latest kafka-topics.sh --create --topic buc --replication-factor 1 --partitions 1 --zookeeper zookeeper:2181
+
+** list all topics
+docker run --rm --network buc-kafka -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 bitnami/kafka:latest kafka-topics.sh --list --zookeeper zookeeper:2181
+
+** create publisher
+docker run --rm --interactive --network buc-kafka -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 bitnami/kafka:latest kafka-console-producer.sh --topic buc --broker-list kafka:9092
+
+** create consumer
+docker run --rm --network buc-kafka -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 bitnami/kafka:latest kafka-console-consumer.sh --topic buc --from-beginning --bootstrap-server kafka:9092
+

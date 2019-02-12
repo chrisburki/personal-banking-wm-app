@@ -3,7 +3,8 @@
 #create cluster
 gcloud config set project buc-personal-banking
 gcloud config set compute/zone europe-west3-c
-gcloud container clusters create personalbanking --machine-type=g1-small --disk-size=30GB --num-nodes=1
+#gcloud container clusters create personalbanking --machine-type=g1-small --disk-size=30GB --num-nodes=1
+gcloud container clusters create personalbanking
 gcloud container clusters get-credentials personalbanking
 
 #create deployments
