@@ -211,6 +211,8 @@ Kafka
 -----
 https://github.com/kubernetes/contrib/tree/master/statefulsets/kafka
 https://www.learningjournal.guru/courses/kafka/kafka-foundation-training/
+https://thepracticaldeveloper.com/2018/11/24/spring-boot-kafka-config/
+
 
 -- Check it out locally
 https://medium.com/@itseranga/kafka-and-zookeeper-with-docker-65cff2c2c34f
@@ -232,8 +234,11 @@ docker run --rm --network buc-kafka -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 bi
 docker run --rm --network buc-kafka -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 bitnami/kafka:latest kafka-topics.sh --list --zookeeper zookeeper:2181
 
 ** create publisher
-docker run --rm --interactive --network buc-kafka -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 bitnami/kafka:latest kafka-console-producer.sh --topic buc --broker-list kafka:9092
+docker run --rm --name kafka-publisher --interactive --network buc-kafka -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 bitnami/kafka:latest kafka-console-producer.sh --topic buc --broker-list kafka:9092
 
 ** create consumer
-docker run --rm --network buc-kafka -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 bitnami/kafka:latest kafka-console-consumer.sh --topic buc --from-beginning --bootstrap-server kafka:9092
+docker run --rm --name kafka-consumer --network buc-kafka -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 bitnami/kafka:latest kafka-console-consumer.sh --topic buc --from-beginning --bootstrap-server kafka:9092
+
+** create wm-consumer
+docker run -d --name wm-kafkapublisher --network buc-kafka -p 8080:8080 wm-kafkapublisher:latest
 
