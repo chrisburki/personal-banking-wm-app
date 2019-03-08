@@ -81,7 +81,7 @@ metadata:
   name: kafka
 spec:
   selector:
-    app: kafka"
+    app: kafka
     role: backend
     scs: wm
   ports:
