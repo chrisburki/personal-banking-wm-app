@@ -54,6 +54,16 @@ docker build -t wm-testrestclient .
 docker tag wm-testrestclient chrisburki/wm-testrestclient
 docker push chrisburki/wm-testrestclient:latest
 
+docker build -t wm-kafkapublisher .
+
+docker build -t wm-kafkaconsumer .
+
+
+3b. Docker commands
+-------------------
+FOR /f "tokens=*" %i IN ('docker ps -q') DO docker stop %i
+FOR /f "tokens=*" %i IN ('docker container ls -a') DO docker rm %i
+
 
 4. run docker image
 -------------------
@@ -212,7 +222,7 @@ Kafka
 https://github.com/kubernetes/contrib/tree/master/statefulsets/kafka
 https://www.learningjournal.guru/courses/kafka/kafka-foundation-training/
 https://thepracticaldeveloper.com/2018/11/24/spring-boot-kafka-config/
-
+https://github.com/TechPrimers/spring-boot-kafka-producer-example
 
 -- Check it out locally
 https://medium.com/@itseranga/kafka-and-zookeeper-with-docker-65cff2c2c34f
@@ -239,6 +249,17 @@ docker run --rm --name kafka-publisher --interactive --network buc-kafka -e KAFK
 ** create consumer
 docker run --rm --name kafka-consumer --network buc-kafka -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 bitnami/kafka:latest kafka-console-consumer.sh --topic buc --from-beginning --bootstrap-server kafka:9092
 
-** create wm-consumer
-docker run -d --name wm-kafkapublisher --network buc-kafka -p 8080:8080 wm-kafkapublisher:latest
+** create wm-kafkapublisher
+docker run -d --name wm-kafkapublisher --network buc-kafka -p 8081:8080 wm-kafkapublisher:latest
 
+http://localhost:8080/publisher/messages
+{
+    "id": 2,
+    "name": "HUGO"
+}
+
+** create wm-kafkaconsumer
+docker run -d --name wm-kafkaconsumer --network buc-kafka -p 8080:8080 wm-kafkaconsumer:latest
+
+http://localhost:8081/consumer/messages
+http://localhost:8081/consumer/messages/{id}

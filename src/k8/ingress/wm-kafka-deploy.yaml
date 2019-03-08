@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wm-zookeeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zookeeper
+      role: backend
+      scs: wm
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+        role: backend
+        scs: wm
+    spec:
+      containers:
+      - name: wm-zookeeper
+        image: bitnami/zookeeper
+        imagePullPolicy: Always
+        ports:
+        - protocol: TCP
+          containerPort: 2181
+        env:
+        - name: ZOOKEEPER_ID
+          value: "1"
+        - name: ZOOKEEPER_SERVER_1
+          value: zookeeper
+        - name: ALLOW_ANONYMOUS_LOGIN
+          value: yes
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wm-zookeeper
+spec:
+  selector:
+    app: zookeeper
+    role: backend
+    scs: wm
+  ports:
+  - protocol: TCP          
+    port: 2181
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wm-kafka-broker
+spec:
+  replicas: 1
+    matchLabels:
+      app: kafka
+      role: backend
+      scs: wm
+  template:
+    metadata:
+      labels:
+        app: kafka
+        role: backend
+        scs: wm
+    spec:
+      containers:
+      - name: wm-kafka-broker
+        image: bitnami/kafka
+        imagePullPolicy: Always
+        ports:
+        - protocol: TCP
+          containerPort: 9092
+        env:
+        - name: KAFKA_ZOOKEEPER_CONNECT
+          value: zookeeper:2181
+        - name: KAFKA_BROKER_ID
+          value: "0"
+        - name: ALLOW_PLAINTEXT_LISTENER
+          value: yes
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+spec:
+  selector:
+    app: kafka
+    role: backend
+    scs: wm
+  ports:
+  - protocol: TCP
+    port: 9092
+  type: NodePort
