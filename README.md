@@ -129,6 +129,10 @@ kubectl create -f src/k8/ingress/wm-customer-deploy-ingress.yaml
 kubectl create -f src/k8/ingress/wm-app-deploy-ingress.yaml
 kubectl create -f src/k8/ingress/ingress-std/wm-ingress.yaml
 
+-- kafka
+kubectl create -f src/k8/ingress/wm-kafka-deploy.yaml
+
+
 -- delete deployments
 kubectl delete -f src/k8/ingress/ingress-std/wm-ingress.yaml
 kubectl delete -f src/k8/ingress/wm-app-deploy-ingress.yaml
@@ -136,6 +140,8 @@ kubectl delete -f src/k8/ingress/wm-customer-deploy-ingress.yaml
 kubectl delete configmap hostname-config
 kubectl delete -f src/k8/ingress/wm-customer-db-deploy.yaml
 
+-- kafka
+kubectl delete -f src/k8/ingress/wm-kafka-deploy.yaml
 
 gcloud container clusters delete personalbanking
 --------------------------

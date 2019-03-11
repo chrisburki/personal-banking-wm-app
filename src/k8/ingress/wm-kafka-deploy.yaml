@@ -34,7 +34,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: wzookeeper
+  name: zookeeper
 spec:
   selector:
     app: zookeeper
