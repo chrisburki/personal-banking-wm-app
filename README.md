@@ -223,6 +223,7 @@ https://github.com/kubernetes/contrib/tree/master/statefulsets/kafka
 https://www.learningjournal.guru/courses/kafka/kafka-foundation-training/
 https://thepracticaldeveloper.com/2018/11/24/spring-boot-kafka-config/
 https://github.com/TechPrimers/spring-boot-kafka-producer-example
+https://robertbrem.github.io/Microservices_with_Kubernetes/19_CQRS_with_Kafka/01_Setup_Kafka/
 
 -- Check it out locally
 https://medium.com/@itseranga/kafka-and-zookeeper-with-docker-65cff2c2c34f
