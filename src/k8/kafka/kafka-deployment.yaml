@@ -13,6 +13,7 @@ spec:
     app: kafka
   sessionAffinity: None
   type: ClusterIP
+
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -107,6 +108,7 @@ spec:
         requests:
           storage: 1Gi
       storageClassName: rook-block
+
 ---
 apiVersion: v1
 kind: Pod
