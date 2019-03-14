@@ -59,7 +59,7 @@ spec:
           value: "1"
         - name: KAFKA_JMX_PORT
           value: "5555"
-        image: confluentinc/cp-kafka:latest
+        image: confluentinc/cp-kafka:4.1.2-2
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
