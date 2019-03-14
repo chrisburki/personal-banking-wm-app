@@ -56,7 +56,7 @@ spec:
         - name: KAFKA_LOG_DIRS
           value: /opt/kafka/data/logs
         - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
-          value: "3"
+          value: "1"
         - name: KAFKA_JMX_PORT
           value: "5555"
         image: confluentinc/cp-kafka:latest
