@@ -131,6 +131,7 @@ kubectl create -f src/k8/ingress/ingress-std/wm-ingress.yaml
 
 -- kafka
 kubectl create -f src/k8/ingress/wm-kafka-deploy.yaml
+kubectl create -f src/k8/ingress/wm-kafka-client-deploy.yaml
 
 
 -- delete deployments
@@ -141,6 +142,7 @@ kubectl delete configmap hostname-config
 kubectl delete -f src/k8/ingress/wm-customer-db-deploy.yaml
 
 -- kafka
+kubectl delete -f src/k8/ingress/wm-kafka-client-deploy.yaml
 kubectl delete -f src/k8/ingress/wm-kafka-deploy.yaml
 
 gcloud container clusters delete personalbanking
@@ -230,6 +232,11 @@ https://www.learningjournal.guru/courses/kafka/kafka-foundation-training/
 https://thepracticaldeveloper.com/2018/11/24/spring-boot-kafka-config/
 https://github.com/TechPrimers/spring-boot-kafka-producer-example
 https://robertbrem.github.io/Microservices_with_Kubernetes/19_CQRS_with_Kafka/01_Setup_Kafka/
+https://imti.co/kafka-kubernetes/
+https://dojoblog.dellemc.com/dojo/deploy-kafka-cluster-kubernetes/
+https://github.com/kow3ns/kubernetes-kafka/blob/master/manifests/README.md
+
+
 
 -- Check it out locally
 https://medium.com/@itseranga/kafka-and-zookeeper-with-docker-65cff2c2c34f
@@ -270,3 +277,13 @@ docker run -d --name wm-kafkaconsumer --network buc-kafka -p 8080:8080 wm-kafkac
 
 http://localhost:8081/consumer/messages
 http://localhost:8081/consumer/messages/{id}
+
+
+kubectl run -it --rm --restart=Never busybox --image=busybox sh
+
+kubectl run -it --rm --restart=Never --image=bitnami/kafka:latest listtopic -- kafka-topics.sh --list --zookeeper zookeeper.default.svc.cluster.local:2181
+kubectl run -ti --image=gcr.io/google_containers/kubernetes-kafka:1.0-10.2.1 createtopic --restart=Never --rm -- kafka-topics.sh --create \
+--topic test \
+--zookeeper zk-cs.default.svc.cluster.local:2181 \
+--partitions 1 \
+--replication-factor 3
