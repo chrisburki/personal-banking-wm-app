@@ -98,7 +98,7 @@ spec:
       terminationGracePeriodSeconds: 60
       volumes:
       - emptyDir: {}
-        name: data
+        name: datadir
   updateStrategy:
     type: OnDelete
 
