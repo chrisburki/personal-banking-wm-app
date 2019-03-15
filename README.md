@@ -130,8 +130,8 @@ kubectl create -f src/k8s/ingress/wm-app-deploy-ingress.yaml
 kubectl create -f src/k8s/ingress/ingress-std/wm-ingress.yaml
 
 -- kafka
-kubectl create -f src/k8s/kafka/zookeeper-deploy.yaml
-kubectl create -f src/k8s/kafka/kafka-deploy.yaml
+kubectl create -f src/k8s/kafka/wm-zookeeper-deploy.yaml
+kubectl create -f src/k8s/kafka/wm-kafka-deploy.yaml
 kubectl create -f src/k8s/ingress/wm-kafka-client-deploy.yaml
 
 
@@ -144,8 +144,8 @@ kubectl delete -f src/k8s/ingress/wm-customer-db-deploy.yaml
 
 -- kafka
 kubectl create -f src/k8s/ingress/wm-kafka-client-deploy.yaml
-kubectl create -f src/k8s/kafka/kafka-deploy.yaml
-kubectl create -f src/k8s/kafka/zookeeper-deploy.yaml
+kubectl create -f src/k8s/kafka/wm-kafka-deploy.yaml
+kubectl create -f src/k8s/kafka/wm-zookeeper-deploy.yaml
 
 gcloud container clusters delete personalbanking
 --------------------------
