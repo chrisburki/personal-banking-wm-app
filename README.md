@@ -92,14 +92,14 @@ update: git pull orgin master
 6. run on kubernetes
 --------------------
 -- loadbalancer
-kubectl apply -f ./src/k8/loadbalancer
+kubectl apply -f ./src/k8s/loadbalancer
 
-chmod +x ./src/k8/wm-loadbalancer.sh
-./src/k8/wm-loadbalancer.sh
+chmod +x ./src/k8s/wm-loadbalancer.sh
+./src/k8s/wm-loadbalancer.sh
 
 -- ingress
 -- var 1 - nginx ingress controller
-kubectl apply -f ./src/k8/ingress/ingress-controller1
+kubectl apply -f ./src/k8s/ingress/ingress-controller1
 
 -- var 2 - nginxinc ingress
 https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/installation.md
@@ -108,7 +108,7 @@ https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/installation.md
 see directory ingress-std
 
 -- deploy app for ingress
-kubectl apply -f ./src/k8/ingress
+kubectl apply -f ./src/k8s/ingress
 
 -- start stop with gcp load balaner
 https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer
@@ -123,27 +123,29 @@ gcloud container clusters create personalbanking --machine-type=g1-small --disk-
 gcloud container clusters get-credentials personalbanking
 
 -- create deployments
-kubectl create -f src/k8/ingress/wm-customer-db-deploy.yaml
+kubectl create -f src/k8s/ingress/wm-customer-db-deploy.yaml
 kubectl create configmap hostname-config --from-literal=postgres_host=$(kubectl get svc wm-customer-db -o jsonpath="{.spec.clusterIP}")
-kubectl create -f src/k8/ingress/wm-customer-deploy-ingress.yaml
-kubectl create -f src/k8/ingress/wm-app-deploy-ingress.yaml
-kubectl create -f src/k8/ingress/ingress-std/wm-ingress.yaml
+kubectl create -f src/k8s/ingress/wm-customer-deploy-ingress.yaml
+kubectl create -f src/k8s/ingress/wm-app-deploy-ingress.yaml
+kubectl create -f src/k8s/ingress/ingress-std/wm-ingress.yaml
 
 -- kafka
-kubectl create -f src/k8/ingress/wm-kafka-deploy.yaml
-kubectl create -f src/k8/ingress/wm-kafka-client-deploy.yaml
+kubectl create -f src/k8s/kafka/zookeeper-deploy.yaml
+kubectl create -f src/k8s/kafka/kafka-deploy.yaml
+kubectl create -f src/k8s/ingress/wm-kafka-client-deploy.yaml
 
 
 -- delete deployments
-kubectl delete -f src/k8/ingress/ingress-std/wm-ingress.yaml
-kubectl delete -f src/k8/ingress/wm-app-deploy-ingress.yaml
-kubectl delete -f src/k8/ingress/wm-customer-deploy-ingress.yaml
+kubectl delete -f src/k8s/ingress/ingress-std/wm-ingress.yaml
+kubectl delete -f src/k8s/ingress/wm-app-deploy-ingress.yaml
+kubectl delete -f src/k8s/ingress/wm-customer-deploy-ingress.yaml
 kubectl delete configmap hostname-config
-kubectl delete -f src/k8/ingress/wm-customer-db-deploy.yaml
+kubectl delete -f src/k8s/ingress/wm-customer-db-deploy.yaml
 
 -- kafka
-kubectl delete -f src/k8/ingress/wm-kafka-client-deploy.yaml
-kubectl delete -f src/k8/ingress/wm-kafka-deploy.yaml
+kubectl create -f src/k8s/ingress/wm-kafka-client-deploy.yaml
+kubectl create -f src/k8s/kafka/kafka-deploy.yaml
+kubectl create -f src/k8s/kafka/zookeeper-deploy.yaml
 
 gcloud container clusters delete personalbanking
 --------------------------
@@ -279,11 +281,45 @@ http://localhost:8081/consumer/messages
 http://localhost:8081/consumer/messages/{id}
 
 
-kubectl run -it --rm --restart=Never busybox --image=busybox sh
 
+-- Check it out on kubernetes
+
+** bitnami
+// create a topic "buc"
+kubectl run -ti --rm --restart=Never --image=bitnami/kafka:latest createtopic -- kafka-topics.sh --create --topic buc --replication-factor 1 --partitions 1 --zookeeper zookeeper.default.svc.cluster.local:2181
+
+// list all topics
 kubectl run -it --rm --restart=Never --image=bitnami/kafka:latest listtopic -- kafka-topics.sh --list --zookeeper zookeeper.default.svc.cluster.local:2181
-kubectl run -ti --image=gcr.io/google_containers/kubernetes-kafka:1.0-10.2.1 createtopic --restart=Never --rm -- kafka-topics.sh --create \
---topic test \
---zookeeper zk-cs.default.svc.cluster.local:2181 \
---partitions 1 \
---replication-factor 3
+
+// create publisher
+kubectl run -it --rm --restart=Never --image=bitnami/kafka:latest kafka-publisher -- kafka-console-producer.sh --topic buc --broker-list kafka.default.svc.cluster.local:9092
+
+// create consumer
+kubectl run -it --rm --restart=Never  --env=KAFKA_ZOOKEEPER_CONNECT=zookeeper.default.svc.cluster.local:2181 --image=bitnami/kafka:latest kafka-consumer -- kafka-console-consumer.sh --topic buc --from-beginning --bootstrap-server kafka.default.svc.cluster.local:9092
+
+
+** confluentinc: with test-client
+// create a topic "test"
+kubectl exec kafka-test-client -- /usr/bin/kafka-topics --zookeeper kafka-zookeeper:2181 --topic test --create --partitions 1 --replication-factor 1
+
+// list all topics
+kubectl exec kafka-test-client -- /usr/bin/kafka-topics --zookeeper kafka-zookeeper:2181 --list
+
+// create publisher
+kubectl exec -ti kafka-test-client -- /usr/bin/kafka-console-producer --broker-list kafka:9092 --topic test
+
+// create consumer
+kubectl exec -ti kafka-test-client -- /usr/bin/kafka-console-consumer --bootstrap-server kafka:9092 --topic test --from-beginning
+
+** confluentinc: with ad hoc pod
+// create a topic "test"
+kubectl run -ti --rm --restart=Never --image=bitnami/kafka:latest createtopic -- kafka-topics --create --topic test --replication-factor 1 --partitions 1 --zookeeper zookeeper.default.svc.cluster.local:2181
+
+// list all topics
+kubectl run -it --rm --restart=Never --image=bitnami/kafka:latest listtopic -- kafka-topics.sh --list --zookeeper zookeeper.default.svc.cluster.local:2181
+
+// create publisher
+kubectl run -it --rm --restart=Never --image=confluentinc/cp-kafka:4.1.2-2 kafka-publisher -- kafka-console-producer --topic test --broker-list kafka.default.svc.cluster.local:9092
+
+// create consumer
+kubectl run -it --rm --restart=Never --image=confluentinc/cp-kafka:4.1.2-2 kafka-consumer -- kafka-console-consumer --topic test --from-beginning --bootstrap-server kafka.default.svc.cluster.local:9092
