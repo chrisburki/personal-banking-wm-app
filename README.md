@@ -143,9 +143,9 @@ kubectl delete configmap hostname-config
 kubectl delete -f src/k8s/ingress/wm-customer-db-deploy.yaml
 
 -- kafka
-kubectl create -f src/k8s/ingress/wm-kafka-client-deploy.yaml
-kubectl create -f src/k8s/kafka/wm-kafka-deploy.yaml
-kubectl create -f src/k8s/kafka/wm-zookeeper-deploy.yaml
+kubectl delete -f src/k8s/ingress/wm-kafka-client-deploy.yaml
+kubectl delete -f src/k8s/kafka/wm-kafka-deploy.yaml
+kubectl delete -f src/k8s/kafka/wm-zookeeper-deploy.yaml
 
 gcloud container clusters delete personalbanking
 --------------------------
@@ -166,6 +166,10 @@ https://blog.docker.com/2015/04/tips-for-deploying-nginx-official-image-with-doc
 
 -- run pod for debug reasons
 kubectl run -it --rm --restart=Never busybox --image=busybox sh
+kubectl run -it --rm --restart=Never busybox --image=radial/busyboxplus:curl sh
+
+kubectl run curl-<YOUR NAME> --image=radial/busyboxplus:curl -i --tty --rm
+
 run: wget -qO- 10.11.250.20:80/customer/13
 https://kubernetes.io/docs/tasks/debug-application-cluster/debug-service/
 
@@ -274,6 +278,8 @@ http://localhost:8080/publisher/messages
     "name": "HUGO"
 }
 
+curl --header "Content-Type: application/json" --request POST --data '{"id":"2","name":"HUGO"}' http://10.24.2.13:8080/publisher/messages
+
 ** create wm-kafkaconsumer
 docker run -d --name wm-kafkaconsumer --network buc-kafka -p 8080:8080 wm-kafkaconsumer:latest
 
@@ -300,26 +306,26 @@ kubectl run -it --rm --restart=Never  --env=KAFKA_ZOOKEEPER_CONNECT=zookeeper.de
 
 ** confluentinc: with test-client
 // create a topic "test"
-kubectl exec kafka-test-client -- /usr/bin/kafka-topics --zookeeper kafka-zookeeper:2181 --topic test --create --partitions 1 --replication-factor 1
+kubectl -n wm-kafka exec kafka-test-client -- /usr/bin/kafka-topics --zookeeper kafka-zookeeper:2181 --topic test --create --partitions 1 --replication-factor 1
 
 // list all topics
-kubectl exec kafka-test-client -- /usr/bin/kafka-topics --zookeeper kafka-zookeeper:2181 --list
+kubectl -n wm-kafka exec kafka-test-client -- /usr/bin/kafka-topics --zookeeper kafka-zookeeper:2181 --list
 
 // create publisher
-kubectl exec -ti kafka-test-client -- /usr/bin/kafka-console-producer --broker-list kafka:9092 --topic test
+kubectl -n wm-kafka exec -ti kafka-test-client -- /usr/bin/kafka-console-producer --broker-list kafka:9092 --topic test
 
 // create consumer
-kubectl exec -ti kafka-test-client -- /usr/bin/kafka-console-consumer --bootstrap-server kafka:9092 --topic test --from-beginning
+kubectl -n wm-kafka exec -ti kafka-test-client -- /usr/bin/kafka-console-consumer --bootstrap-server kafka:9092 --topic test --from-beginning
 
 ** confluentinc: with ad hoc pod
 // create a topic "test"
-kubectl run -ti --rm --restart=Never --image=bitnami/kafka:latest createtopic -- kafka-topics --create --topic test --replication-factor 1 --partitions 1 --zookeeper zookeeper.default.svc.cluster.local:2181
+kubectl run -ti --rm --restart=Never --image=confluentinc/cp-kafka:4.1.2-2 createtopic -- kafka-topics --create --topic test --replication-factor 1 --partitions 1 --zookeeper kafka-zookeeper.wm-kafka.svc.cluster.local:2181
 
 // list all topics
-kubectl run -it --rm --restart=Never --image=bitnami/kafka:latest listtopic -- kafka-topics.sh --list --zookeeper zookeeper.default.svc.cluster.local:2181
+kubectl run -it --rm --restart=Never --image=confluentinc/cp-kafka:4.1.2-2 listtopic -- kafka-topics --list --zookeeper kafka-zookeeper.wm-kafka.svc.cluster.local:2181
 
 // create publisher
-kubectl run -it --rm --restart=Never --image=confluentinc/cp-kafka:4.1.2-2 kafka-publisher -- kafka-console-producer --topic test --broker-list kafka.default.svc.cluster.local:9092
+kubectl run -it --rm --restart=Never --image=confluentinc/cp-kafka:4.1.2-2 kafka-publisher -- kafka-console-producer --topic buc --broker-list kafka.wm-kafka.svc.cluster.local:9092
 
 // create consumer
-kubectl run -it --rm --restart=Never --image=confluentinc/cp-kafka:4.1.2-2 kafka-consumer -- kafka-console-consumer --topic test --from-beginning --bootstrap-server kafka.default.svc.cluster.local:9092
+kubectl run -it --rm --restart=Never --image=confluentinc/cp-kafka:4.1.2-2 kafka-consumer -- kafka-console-consumer --topic buc --from-beginning --bootstrap-server kafka.wm-kafka.svc.cluster.local:9092
