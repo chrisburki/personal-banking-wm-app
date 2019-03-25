@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wm-pubsub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pubsub
+      role: backend
+      scs: wm
+  template:
+    metadata:
+      labels:
+        app: pubsub
+        role: backend
+        scs: wm
+    spec:
+      containers:
+      - name: wm-pubsub
+        image: chrisburki/wm-pubsub
+        imagePullPolicy: Always
+        ports:
+        - protocol: TCP
+          containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wm-pubsub
+spec:
+  selector:
+    app: pubsub
+    role: backend
+    scs: wm
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: NodePort

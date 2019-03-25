@@ -107,6 +107,10 @@ https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/installation.md
 -- var 3 - standard GCP load balancer via ingress
 see directory ingress-std
 
+** cleanup
+kubectl delete namespace ingress-nginx (only needed for var 3)
+run wm-ingress-cleanup.sh
+
 -- deploy app for ingress
 kubectl apply -f ./src/k8s/ingress
 
@@ -153,11 +157,6 @@ gcloud container clusters delete personalbanking
 --------------------------
 
 
--- cleanup
-kubectl delete namespace ingress-nginx (only needed for var 3)
-run wm-ingress-cleanup.sh
-
-
 7. debug on kubernetes
 ----------------------
 --- show logs within a container
@@ -190,6 +189,7 @@ kubectl exec -ti [POD_NAME] bash
 yaml
 ----
 kubectl get deploy deploymentname -o yaml --export
+
 
 8. documentations
 -----------------
@@ -231,8 +231,9 @@ kubectl expose deployment wm-address --target-port=8080 --port=8080 --type=NodeP
 kubectl run wm-tc --image=chrisburki/wm-testrestclient:latest --port=8080
 kubectl expose deployment wm-tc --target-port=8080 --port=8080 --type=NodePort
 
-Kafka
------
+
+9. Kafka
+--------
 https://github.com/kubernetes/contrib/tree/master/statefulsets/kafka
 https://www.learningjournal.guru/courses/kafka/kafka-foundation-training/
 https://thepracticaldeveloper.com/2018/11/24/spring-boot-kafka-config/
@@ -278,7 +279,7 @@ http://localhost:8080/publisher/messages
     "name": "HUGO"
 }
 
-curl --header "Content-Type: application/json" --request POST --data '{"id":"2","name":"HUGO"}' http://10.24.2.13:8080/publisher/messages
+curl --header "Content-Type: application/json" --request POST --data '{"id":"2","name":"ANIEL"}' http://10.27.252.110:80/publisher/messages
 
 ** create wm-kafkaconsumer
 docker run -d --name wm-kafkaconsumer --network buc-kafka -p 8080:8080 wm-kafkaconsumer:latest
@@ -286,7 +287,7 @@ docker run -d --name wm-kafkaconsumer --network buc-kafka -p 8080:8080 wm-kafkac
 http://localhost:8081/consumer/messages
 http://localhost:8081/consumer/messages/{id}
 
-
+curl http://10.27.248.209:80/consumer/messages
 
 -- Check it out on kubernetes
 
@@ -329,3 +330,4 @@ kubectl run -it --rm --restart=Never --image=confluentinc/cp-kafka:4.1.2-2 kafka
 
 // create consumer
 kubectl run -it --rm --restart=Never --image=confluentinc/cp-kafka:4.1.2-2 kafka-consumer -- kafka-console-consumer --topic buc --from-beginning --bootstrap-server kafka.wm-kafka.svc.cluster.local:9092
+
