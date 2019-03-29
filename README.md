@@ -120,32 +120,31 @@ https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer
 --------------------------
 -- create & delete cluster (project-id: 281928467963)
 --------------------------
+-- create cluster
 gcloud config set project buc-personal-banking
 gcloud config set compute/zone europe-west3-c
 gcloud container clusters create personalbanking --machine-type=g1-small --disk-size=30GB --num-nodes=1
 gcloud container clusters get-credentials personalbanking
 
--- create deployments
+-- create deployments for app
 kubectl create -f src/k8s/ingress/wm-customer-db-deploy.yaml
 kubectl create configmap hostname-config --from-literal=postgres_host=$(kubectl get svc wm-customer-db -o jsonpath="{.spec.clusterIP}")
 kubectl create -f src/k8s/ingress/wm-customer-deploy-ingress.yaml
 kubectl create -f src/k8s/ingress/wm-app-deploy-ingress.yaml
 kubectl create -f src/k8s/ingress/ingress-std/wm-ingress.yaml
 
--- kafka
+-- create kafka
 kubectl create -f src/k8s/kafka/wm-zookeeper-deploy.yaml
 kubectl create -f src/k8s/kafka/wm-kafka-deploy.yaml
 kubectl create -f src/k8s/ingress/wm-kafka-client-deploy.yaml
 
--- pubsub
+-- create pubsub
 gcloud services enable pubsub.googleapis.com
 gcloud pubsub topics create buc
+gcloud pubsub subscriptions create buc-sub --topic buc --ack-deadline=60
 
-//gcloud iam service-accounts create [NAME] --display-name "[SA-DISPLAY-NAME]"
 gcloud iam service-accounts create wm-pubsub-app --display-name "wm-pubsub-app"
-//gcloud projects add-iam-policy-binding [PROJECT_ID] --member "serviceAccount:[NAME]@[PROJECT_ID].iam.gserviceaccount.com" --role "roles/pubsub.subscriber"
-gcloud projects add-iam-policy-binding buc-personal-banking --member "serviceAccount:wm-pubsub-app@buc-personal-banking.iam.gserviceaccount.com" --role "roles/pubsub.subscriber"
-//gcloud iam service-accounts keys create [FILE_NAME].json --iam-account [NAME]@[PROJECT_ID].iam.gserviceaccount.com
+gcloud projects add-iam-policy-binding buc-personal-banking --member "serviceAccount:wm-pubsub-app@buc-personal-banking.iam.gserviceaccount.com" --role "roles/pubsub.admin"
 gcloud iam service-accounts keys create ~/wm-pubsub-key.json --iam-account wm-pubsub-app@buc-personal-banking.iam.gserviceaccount.com
 kubectl create secret generic wm-pubsub-key --from-file=key.json=wm-pubsub-key.json
 
@@ -158,16 +157,23 @@ kubectl delete -f src/k8s/ingress/wm-customer-deploy-ingress.yaml
 kubectl delete configmap hostname-config
 kubectl delete -f src/k8s/ingress/wm-customer-db-deploy.yaml
 
--- kafka
+-- delete kafka
 kubectl delete -f src/k8s/ingress/wm-kafka-client-deploy.yaml
 kubectl delete -f src/k8s/kafka/wm-kafka-deploy.yaml
 kubectl delete -f src/k8s/kafka/wm-zookeeper-deploy.yaml
 
--- pubsub
-gcloud services enable pubsub.googleapis.com
-gcloud pubsub topics delete buc
+-- delete pubsub
 kubectl delete -f src/k8s/pubsub/wm-pubsub-deploy.yaml
 
+gcloud pubsub subscriptions delete buc-sub
+gcloud pubsub topics delete buc
+
+kubectl delete secret wm-pubsub-key
+gcloud iam service-accounts keys delete ~/wm-pubsub-key.json --iam-account wm-pubsub-app@buc-personal-banking.iam.gserviceaccount.com
+gcloud projects remove-iam-policy-binding buc-personal-banking --member "serviceAccount:wm-pubsub-app@buc-personal-banking.iam.gserviceaccount.com" --role "roles/pubsub.subscriber"
+gcloud iam service-accounts delete wm-pubsub-app@buc-personal-banking.iam.gserviceaccount.com
+
+-- delete cluster
 gcloud container clusters delete personalbanking
 --------------------------
 -- create & delete cluster
@@ -359,10 +365,12 @@ https://cloud.google.com/pubsub/docs/reference/libraries#client-libraries-instal
 
 
 gcloud services enable pubsub.googleapis.com
-gcloud pubsub topics create my-buc
-gcloud pubsub subscriptions create my-sub --topic my-buc --ack-deadline=60
+gcloud pubsub topics create buc
+gcloud pubsub subscriptions create buc-sub --topic buc --ack-deadline=60
 gcloud pubsub topics list
 gcloud pubsub subscriptions list
-gcloud pubsub topics publish my-buc --message hello
-gcloud pubsub topics publish my-buc --message goodbye
-gcloud pubsub subscriptions pull --auto-ack --limit=2 my-sub
+gcloud pubsub topics publish buc --message hello
+gcloud pubsub topics publish buc --message goodbye
+gcloud pubsub subscriptions pull --auto-ack --limit=2 buc-sub
+
+curl http://10.27.250.17:80/pubSub/pull?subscription1=buc-sub
