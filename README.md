@@ -17,7 +17,6 @@ Interesting Links
 Istio: istio.io
 github.com/saturnism/istio-by-example-java
 
-g.co/codelabs/cloud
 
 https://github.com/arun-gupta/kubernetes-for-java-developers
 https://github.com/arun-gupta/kubernetes-java-sample/blob/master/workshop.adoc#create-kubernetes-cluster
@@ -119,7 +118,7 @@ https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer
 
 
 --------------------------
--- create & delete cluster
+-- create & delete cluster (project-id: 281928467963)
 --------------------------
 gcloud config set project buc-personal-banking
 gcloud config set compute/zone europe-west3-c
@@ -138,6 +137,19 @@ kubectl create -f src/k8s/kafka/wm-zookeeper-deploy.yaml
 kubectl create -f src/k8s/kafka/wm-kafka-deploy.yaml
 kubectl create -f src/k8s/ingress/wm-kafka-client-deploy.yaml
 
+-- pubsub
+gcloud services enable pubsub.googleapis.com
+gcloud pubsub topics create buc
+
+//gcloud iam service-accounts create [NAME] --display-name "[SA-DISPLAY-NAME]"
+gcloud iam service-accounts create wm-pubsub-app --display-name "wm-pubsub-app"
+//gcloud projects add-iam-policy-binding [PROJECT_ID] --member "serviceAccount:[NAME]@[PROJECT_ID].iam.gserviceaccount.com" --role "roles/pubsub.subscriber"
+gcloud projects add-iam-policy-binding buc-personal-banking --member "serviceAccount:wm-pubsub-app@buc-personal-banking.iam.gserviceaccount.com" --role "roles/pubsub.subscriber"
+//gcloud iam service-accounts keys create [FILE_NAME].json --iam-account [NAME]@[PROJECT_ID].iam.gserviceaccount.com
+gcloud iam service-accounts keys create ~/wm-pubsub-key.json --iam-account wm-pubsub-app@buc-personal-banking.iam.gserviceaccount.com
+kubectl create secret generic wm-pubsub-key --from-file=key.json=wm-pubsub-key.json
+
+kubectl create -f src/k8s/pubsub/wm-pubsub-deploy.yaml
 
 -- delete deployments
 kubectl delete -f src/k8s/ingress/ingress-std/wm-ingress.yaml
@@ -150,6 +162,11 @@ kubectl delete -f src/k8s/ingress/wm-customer-db-deploy.yaml
 kubectl delete -f src/k8s/ingress/wm-kafka-client-deploy.yaml
 kubectl delete -f src/k8s/kafka/wm-kafka-deploy.yaml
 kubectl delete -f src/k8s/kafka/wm-zookeeper-deploy.yaml
+
+-- pubsub
+gcloud services enable pubsub.googleapis.com
+gcloud pubsub topics delete buc
+kubectl delete -f src/k8s/pubsub/wm-pubsub-deploy.yaml
 
 gcloud container clusters delete personalbanking
 --------------------------
@@ -331,3 +348,21 @@ kubectl run -it --rm --restart=Never --image=confluentinc/cp-kafka:4.1.2-2 kafka
 // create consumer
 kubectl run -it --rm --restart=Never --image=confluentinc/cp-kafka:4.1.2-2 kafka-consumer -- kafka-console-consumer --topic buc --from-beginning --bootstrap-server kafka.wm-kafka.svc.cluster.local:9092
 
+10. PubSub
+----------
+https://medium.com/quintoandar-tech-blog/creating-google-cloud-pub-sub-publishers-and-subscribers-with-spring-cloud-gcp-part-1-setup-a96c53025fec
+https://github.com/spring-cloud/spring-cloud-gcp/tree/master/spring-cloud-gcp-samples/spring-cloud-gcp-pubsub-sample
+https://cloud.google.com/blog/products/gcp/calling-java-developers-spring-cloud-gcp-1-0-is-now-generally-available
+https://docs.spring.io/spring-cloud-gcp/docs/1.1.0.M1/reference/html/_spring_cloud_gcp_for_pub_sub.html
+https://cloud.google.com/kubernetes-engine/docs/tutorials/authenticating-to-cloud-platform
+https://cloud.google.com/pubsub/docs/reference/libraries#client-libraries-install-java
+
+
+gcloud services enable pubsub.googleapis.com
+gcloud pubsub topics create my-buc
+gcloud pubsub subscriptions create my-sub --topic my-buc --ack-deadline=60
+gcloud pubsub topics list
+gcloud pubsub subscriptions list
+gcloud pubsub topics publish my-buc --message hello
+gcloud pubsub topics publish my-buc --message goodbye
+gcloud pubsub subscriptions pull --auto-ack --limit=2 my-sub

@@ -16,6 +16,10 @@ spec:
         role: backend
         scs: wm
     spec:
+      volumes:
+      - name: gcloud-wm-pubsub-key
+        secret:
+          secretName: wm-pubsub-key
       containers:
       - name: wm-pubsub
         image: chrisburki/wm-pubsub
@@ -23,6 +27,12 @@ spec:
         ports:
         - protocol: TCP
           containerPort: 8080
+        volumeMounts:
+        - name: gcloud-wm-pubsub-key
+          mountPath: /var/secrets/google
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /var/secrets/google/key.json
 
 ---
 apiVersion: v1
