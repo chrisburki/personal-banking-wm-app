@@ -16,6 +16,9 @@ Interesting Links
 -----------------
 Istio: istio.io
 github.com/saturnism/istio-by-example-java
+https://docs.google.com/document/d/1Qo8o5C4UpGwMF7Mg02kLTaU4-xCSfJjLcnIFNveMEEA/edit#heading=h.tremawe2ds3r
+https://cloud.google.com/istio/docs/istio-on-gke/installing
+
 
 
 https://github.com/arun-gupta/kubernetes-for-java-developers
@@ -170,7 +173,7 @@ gcloud pubsub topics delete buc
 
 kubectl delete secret wm-pubsub-key
 gcloud iam service-accounts keys delete ~/wm-pubsub-key.json --iam-account wm-pubsub-app@buc-personal-banking.iam.gserviceaccount.com
-gcloud projects remove-iam-policy-binding buc-personal-banking --member "serviceAccount:wm-pubsub-app@buc-personal-banking.iam.gserviceaccount.com" --role "roles/pubsub.subscriber"
+gcloud projects remove-iam-policy-binding buc-personal-banking --member "serviceAccount:wm-pubsub-app@buc-personal-banking.iam.gserviceaccount.com" --role "roles/pubsub.admin"
 gcloud iam service-accounts delete wm-pubsub-app@buc-personal-banking.iam.gserviceaccount.com
 
 -- delete cluster

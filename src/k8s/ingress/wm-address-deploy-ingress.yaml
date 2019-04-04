@@ -20,6 +20,15 @@ spec:
       - name: wm-address
         image: chrisburki/wm-address
         imagePullPolicy: Always
+        livenessProbe:
+          initialDelaySeconds: 60
+          httpGet:
+            path: /actuator/health
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /addresses/ready
+            port: 8080
         ports:
         - protocol: TCP
           containerPort: 8080
