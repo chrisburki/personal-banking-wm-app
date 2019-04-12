@@ -132,6 +132,7 @@ gcloud container clusters get-credentials personalbanking
 -- create deployments for app
 kubectl create -f src/k8s/ingress/wm-customer-db-deploy.yaml
 kubectl create configmap hostname-config --from-literal=postgres_host=$(kubectl get svc wm-customer-db -o jsonpath="{.spec.clusterIP}")
+kubectl create -f src/k8s/ingress/wm-address-deploy-ingress.yaml
 kubectl create -f src/k8s/ingress/wm-customer-deploy-ingress.yaml
 kubectl create -f src/k8s/ingress/wm-app-deploy-ingress.yaml
 kubectl create -f src/k8s/ingress/ingress-std/wm-ingress.yaml
@@ -157,6 +158,7 @@ kubectl create -f src/k8s/pubsub/wm-pubsub-deploy.yaml
 kubectl delete -f src/k8s/ingress/ingress-std/wm-ingress.yaml
 kubectl delete -f src/k8s/ingress/wm-app-deploy-ingress.yaml
 kubectl delete -f src/k8s/ingress/wm-customer-deploy-ingress.yaml
+kubectl delete -f src/k8s/ingress/wm-address-deploy-ingress.yaml
 kubectl delete configmap hostname-config
 kubectl delete -f src/k8s/ingress/wm-customer-db-deploy.yaml
 
@@ -377,3 +379,18 @@ gcloud pubsub topics publish buc --message goodbye
 gcloud pubsub subscriptions pull --auto-ack --limit=2 buc-sub
 
 curl http://10.27.250.17:80/pubSub/pull?subscription1=buc-sub
+
+11. IDE
+-------
+https://cloud.google.com/code/docs/intellij/deploying-a-k8-app
+https://cloud.google.com/storage/docs/reference/libraries#client-libraries-install-java
+https://cloud.google.com/cloud-build/docs/quickstart-docker
+https://cloud.google.com/solutions/continuous-delivery/
+
+gcloud iam service-accounts create buc-google-cloud-build
+gcloud projects add-iam-policy-binding [PROJECT_ID] --member "serviceAccount:buc-google-cloud-build@[PROJECT_ID].iam.gserviceaccount.com" --role "roles/owner"
+gcloud iam service-accounts keys create [FILE_NAME].json --iam-account buc-google-cloud-build@[PROJECT_ID].iam.gserviceaccount.com
+set GOOGLE_APPLICATION_CREDENTIALS=[PATH]
+
+add quickstart.sh
+gcloud builds submit --tag gcr.io/[PROJECT_ID]/quickstart-image .
